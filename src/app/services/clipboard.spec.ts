@@ -1,19 +1,14 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { TestBed } from '@angular/core/testing';
 
-@Injectable({ providedIn: 'root' })
-export class ClipboardService {
+describe('Clipboard', () => {
+  let service: Clipboard;
 
-  private apiUrl = 'http://localhost:3000';
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(Clipboard);
+  });
 
-  constructor(private http: HttpClient) {}
-
-  save(text: string){
-    return this.http.post(`${this.apiUrl}/clipboard`, { text });
-  }
-
-  get(){
-    return this.http.get<{ text: string }>(`${this.apiUrl}/clipboard`);
-  }
-
-}
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});
