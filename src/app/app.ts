@@ -15,8 +15,14 @@ export class App implements OnDestroy{
   serverText = '';
   serverFileName = '';
   private eventSource!: EventSource;
+  // allowClipboard = false;
+  // allowFiles = false;
+  isRestrict = false;
 
   constructor(private clipboardService: ClipboardService, private cdr: ChangeDetectorRef) {
+    this.isRestrict = !!navigator.clipboard && location.protocol === 'https:' || location.hostname === 'localhost';
+    // this.allowClipboard = !!navigator.clipboard && location.protocol === 'https:' || location.hostname === 'localhost';
+    // this.allowFiles = typeof document.createElement('input').onchange !== 'undefined';
     this.loadData();
     this.eventSource = this.clipboardService.listenForUpdates(() => {
       this.loadData();
@@ -81,7 +87,7 @@ export class App implements OnDestroy{
         this.loadData();
       });
     }
-    
+
     input.click();
   }
 

@@ -3,8 +3,8 @@
 
   <div class="container">
     <h2>Clipboard</h2>
-    <button (click)="copyClipboard()">Copy to Clipboard</button>
-    <button (click)="pasteClipboard()">Send from Clipboard</button>
+    <button *ngIf="isRestrict" (click)="copyClipboard()">Copy to Clipboard</button>
+    <button *ngIf="isRestrict" (click)="pasteClipboard()">Send from Clipboard</button>
 
     <textarea [(ngModel)]="inputText"></textarea>
     <button (click)="sendTextToClipboard()">Send from TextBox</button>
@@ -12,7 +12,7 @@
     <textarea class="server-text" [value]="serverText" readonly></textarea>
   </div>
 
-  <div class="container">
+  <div *ngIf="isRestrict" class="container">
     <h2>Files</h2>
     <button (click)="uploadFile()">Send File</button>
     <button (click)="downloadFile()" [disabled]="!serverFileName">Get File</button>
