@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, signal } from '@angular/core';
 import { ClipboardService } from './services/clipboard';
 import { FormsModule } from '@angular/forms';
 
@@ -10,12 +10,20 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnDestroy{
   inputText = '';
   serverText = '';
+  private eventSource!: EventSource;
 
   constructor(private clipboardService: ClipboardService, private cdr: ChangeDetectorRef) {
     this.loadData();
+    this.eventSource = this.clipboardService.listenForUpdates(() => {
+      this.loadData();
+    });
+  }
+
+  ngOnDestroy() {
+    this.eventSource.close();
   }
 
   loadData(){

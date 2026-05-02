@@ -8,6 +8,12 @@ export class ClipboardService {
 
   constructor(private http: HttpClient) {}
 
+  listenForUpdates(onUpdate: () => void): EventSource {
+    const source = new EventSource(`${this.apiUrl}/clipboard/events`);
+    source.onmessage = () => onUpdate();
+    return source;
+  }
+
   save(text: string){
     return this.http.post(`${this.apiUrl}/clipboard`, { text });
   }
