@@ -3,8 +3,8 @@ import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class ClipboardService {
-
-  private apiUrl = 'http://localhost:3000';
+  
+  private apiUrl = `http://${window.location.hostname}:3000`;
 
   constructor(private http: HttpClient) {}
 

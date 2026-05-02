@@ -3,8 +3,13 @@
 
   <div class="container">
     <h2>Clipboard</h2>
-    <button (click)="pasteClipboard()">Paste Clipboard</button>
-    <button (click)="copyClipboard()">Copy Clipboard</button>
+    <button (click)="pasteClipboard()">Send from Clipboard</button>
+    <button (click)="copyClipboard()">Copy to Clipboard</button>
+
+    <textarea [(ngModel)]="inputText"></textarea>
+    <button (click)="sendText()">Send from TextBox</button>
+
+    <textarea class="server-text" [value]="serverText" readonly></textarea>
   </div>
 
   <div class="container disabled">
@@ -12,6 +17,4 @@
     <button disabled>Paste File</button>
     <button disabled>Copy File</button>
   </div>
-
-  <p class="status">{{ statusMessage }}</p>
 </div>

@@ -1,41 +1,58 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectorRef, Component, signal } from '@angular/core';
 import { ClipboardService } from './services/clipboard';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
+  imports: [ CommonModule, FormsModule ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  statusMessage = '';
+  inputText = '';
+  serverText = '';
 
-  constructor(private clipboardService: ClipboardService) {}
+  constructor(private clipboardService: ClipboardService, private cdr: ChangeDetectorRef) {
+    this.loadData();
+  }
+
+  loadData(){
+    this.clipboardService.get().subscribe((data) => {
+      this.serverText = data?.text ?? '';
+      this.cdr.detectChanges();
+    });
+  }
 
   async pasteClipboard() {
     try {
       const text = await navigator.clipboard.readText();
       this.clipboardService.save(text).subscribe(() => {
-        this.statusMessage = 'Clipboard saved';
+        this.loadData();
       });
     }
-    catch {
-      this.statusMessage = 'Clipboard not saved';
-    }
+    catch { }
   }
 
   copyClipboard() {
     this.clipboardService.get().subscribe(async (data) => {
       if(data?.text){
         await navigator.clipboard.writeText(data.text);
+        this.loadData();
       }
-      else{
-        this.statusMessage = 'There is no available data'
-      }
-    })
+    });
   }
+
+  sendText() {
+    if (!this.inputText.trim())
+      return;
+
+    this.clipboardService.save(this.inputText).subscribe(() => {
+      this.serverText = this.inputText;
+      this.inputText = '';
+      this.loadData();
+    });
+  }
+
 }

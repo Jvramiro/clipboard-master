@@ -35,3 +35,21 @@ button:disabled {
 
 .disabled { opacity: 0.5; }
 .status { margin-top: 16px; font-size: 14px; color: #555; }
+
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: 12px;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+textarea.server-text {
+  background: #f0f0f0;
+  color: #888;
+  cursor: default;
+}
