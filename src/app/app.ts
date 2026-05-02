@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 export class App implements OnDestroy{
   inputText = '';
   serverText = '';
+  serverFileName = '';
   private eventSource!: EventSource;
 
   constructor(private clipboardService: ClipboardService, private cdr: ChangeDetectorRef) {
@@ -27,24 +28,19 @@ export class App implements OnDestroy{
   }
 
   loadData(){
-    this.clipboardService.get().subscribe((data) => {
+    this.clipboardService.getClipboard().subscribe((data) => {
       this.serverText = data?.text ?? '';
       this.cdr.detectChanges();
     });
-  }
 
-  async pasteClipboard() {
-    try {
-      const text = await navigator.clipboard.readText();
-      this.clipboardService.save(text).subscribe(() => {
-        this.loadData();
-      });
-    }
-    catch { }
+    this.clipboardService.getFileInfo().subscribe((data) => {
+      this.serverFileName = data?.originalName ?? '';
+      this.cdr.detectChanges();
+    })
   }
 
   copyClipboard() {
-    this.clipboardService.get().subscribe(async (data) => {
+    this.clipboardService.getClipboard().subscribe(async (data) => {
       if(data?.text){
         await navigator.clipboard.writeText(data.text);
         this.loadData();
@@ -52,15 +48,48 @@ export class App implements OnDestroy{
     });
   }
 
-  sendText() {
+  async pasteClipboard() {
+    try {
+      const text = await navigator.clipboard.readText();
+      this.clipboardService.sendClipboard(text).subscribe(() => {
+        this.loadData();
+      });
+    }
+    catch { }
+  }
+
+  sendTextToClipboard() {
     if (!this.inputText.trim())
       return;
 
-    this.clipboardService.save(this.inputText).subscribe(() => {
+    this.clipboardService.sendClipboard(this.inputText).subscribe(() => {
       this.serverText = this.inputText;
       this.inputText = '';
       this.loadData();
     });
+  }
+
+  uploadFile() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = (event: any) => {
+      const file: File = event.target.files[0];
+      if (!file)
+        return;
+
+      this.clipboardService.sendFile(file).subscribe(() => {
+        this.loadData();
+      });
+    }
+    
+    input.click();
+  }
+
+  downloadFile() {
+    if (!this.serverFileName)
+      return;
+
+    window.open(this.clipboardService.getFileUrl(), '_blank');
   }
 
 }

@@ -14,12 +14,26 @@ export class ClipboardService {
     return source;
   }
 
-  save(text: string){
+  getClipboard(){
+    return this.http.get<{ text: string }>(`${this.apiUrl}/clipboard`);
+  }
+
+  sendClipboard(text: string){
     return this.http.post(`${this.apiUrl}/clipboard`, { text });
   }
 
-  get(){
-    return this.http.get<{ text: string }>(`${this.apiUrl}/clipboard`);
+  getFileInfo(){
+    return this.http.get<{ originalName: string }>(`${this.apiUrl}/file/info`);
+  }
+
+  getFileUrl(){
+    return `${this.apiUrl}/file/download`;
+  }
+
+  sendFile(file: File){
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ success: boolean, originalName: string }>(`${this.apiUrl}/file`, formData);
   }
 
 }
