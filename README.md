@@ -69,6 +69,11 @@ Then open `http://YOUR_IP:4200` on any device connected to the same network.
 - **Copy File**: downloads the file currently stored on the server.
 - The file name box shows the name of the current file on the server if one exists.
 
+## Shortcut
+
+There is the `Shortcut-Win.exe` file that will attempt to open two command prompt windows. One window will run the command `node index.js`, and the other window will run `ng serve --host 0.0.0.0`.
+This file is currently in the **testing phase** and is used as a quick shortcut to run the project after the setup phase is complete.
+
 ## Notes
 
 - Clipboard and file data are stored in memory only. Everything is lost when the server is restarted.
