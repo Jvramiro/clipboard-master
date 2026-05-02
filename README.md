@@ -1,59 +1,77 @@
-# ClipboardMaster
+# Clipboard Master
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.3.
+A local network tool to share clipboard text and files between devices on the same Wi-Fi network. Run it on one machine and access it from any device with a browser — no installation required on the other devices.
 
-## Development server
+## Requirements
 
-To start a local development server, run:
+- Node.js 18+
+- npm
+- Angular CLI (`npm install -g @angular/cli`)
 
-```bash
-ng serve
+## Project Structure
+
+```
+clipboard-master/
+├── src/                  # Angular frontend
+└── server/               # Express backend
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Setup
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Run **npm install** in the root and then in the **server** folder:
 
 ```bash
-ng generate component component-name
+npm install
+cd server
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Running
+
+Run this command within the server folder:
 
 ```bash
-ng generate --help
+node index.js
 ```
 
-## Building
-
-To build the project run:
+Run this command in the root directory:
 
 ```bash
-ng build
+ng serve --host 0.0.0.0
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- The backend runs on port `3000` and is available to all devices on the network.
 
-## Running unit tests
+- The `--host 0.0.0.0` flag makes the frontend accessible to other devices on the network. By default it runs on port `4200`.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
 
-```bash
-ng test
-```
+## Accessing from Other Devices
 
-## Running end-to-end tests
+Find your machine's local IP address:
 
-For end-to-end (e2e) testing, run:
+- Windows: `ipconfig` and look for IPv4 Address
+- Linux/Mac: `ip addr` or `ifconfig`
 
-```bash
-ng e2e
-```
+Then open `http://YOUR_IP:4200` on any device connected to the same network.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Features
 
-## Additional Resources
+### Clipboard
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Send from Clipboard**: reads the system clipboard and sends it to the server. Only available when the browser supports the Clipboard API (localhost or HTTPS).
+- **Send Text**: type or paste text manually into the text area and send it to the server. Works on all devices including mobile.
+- **Copy Clipboard**: retrieves the text stored on the server and writes it to the system clipboard.
+- The server text box shows the current text stored on the server and updates automatically when any device sends new content.
+
+### Files
+
+- **Paste File**: opens a file picker, uploads the selected file to the server (stored in memory, not on disk).
+- **Copy File**: downloads the file currently stored on the server.
+- The file name box shows the name of the current file on the server if one exists.
+
+## Notes
+
+- Clipboard and file data are stored in memory only. Everything is lost when the server is restarted.
+- The Clipboard API (`Send from Clipboard`) requires a secure context. It works on `localhost` but not on `http://` from other devices. Use the text area as an alternative on mobile.
+- The frontend detects whether the device supports the Clipboard API and hides the button if it does not.
+- The page listens for server updates using SSE (Server-Sent Events) so it refreshes automatically without polling.
