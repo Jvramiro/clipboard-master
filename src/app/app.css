@@ -1,0 +1,37 @@
+.page {
+  font-family: sans-serif;
+  max-width: 500px;
+  margin: 60px auto;
+  text-align: center;
+}
+
+h1 { margin-bottom: 30px; }
+
+.container {
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.container h2 { margin-bottom: 16px; }
+
+button {
+  margin: 8px;
+  padding: 10px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover { background: #2563eb; }
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.disabled { opacity: 0.5; }
+.status { margin-top: 16px; font-size: 14px; color: #555; }
